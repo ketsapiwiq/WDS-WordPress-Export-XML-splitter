@@ -18,7 +18,7 @@ import sys
 import math
 
 if len(sys.argv) < 2 :
-	print 'Please specify the name of WordPress export file you would like to split'
+	print('Please specify the name of WordPress export file you would like to split')
 	sys.exit(0)
 
 try :
@@ -27,37 +27,37 @@ try :
 	(input_file_path, input_file_string) = os.path.split(sys.argv[1])
 	(input_file_name, input_file_extension) = os.path.splitext(input_file_string)
 except IOError :
-	print 'Could not open file "%s".' % sys.argv[1]
+	print ('Could not open file "%s".' % sys.argv[1])
 	sys.exit(0)
 
 number_of_chunks = max(int(sys.argv[2]), 2) if len(sys.argv) > 2 else 2
-line_delimiter = '\t<item>\n'
+line_delimiter = '<item>\n'
 
 delimiter_count = 0
 for line in lines :
 	if line == line_delimiter :
 		delimiter_count += 1
 
-print ''
-print 'File "%s" contains %s items' % (input_file_string, delimiter_count)
+print ('')
+print ('File "%s" contains %s items' % (input_file_string, delimiter_count))
 
 delimiter_count = 1.0*delimiter_count
 delimiters_per_chunk = int(math.ceil(delimiter_count/number_of_chunks))
 
-print 'Creating %s files with at most %s items each:' % (number_of_chunks, delimiters_per_chunk)
-
+print ('Creating %s files with at most %s items each:' % (number_of_chunks, delimiters_per_chunk)
+)
 header = ""
 footer = "\n</channel>\n</rss>\n"
 chunk_number = 1
 output_file_name = "%s_%s%s" % (input_file_name, chunk_number, input_file_extension)
 output_file = open(output_file_name, 'w')
-print '   Writing chunk %s to file %s...' % (chunk_number, output_file_name)
+print ('   Writing chunk %s to file %s...' % (chunk_number, output_file_name))
 
 delimiter_count = 0
 for line in lines :
 	if line == line_delimiter : delimiter_count += 1
 
-	if chunk_number is 1 and delimiter_count is 0 : header += line
+	if chunk_number == 1 and delimiter_count == 0 : header += line
 
 	if delimiter_count > delimiters_per_chunk :
 		output_file.write(footer)
@@ -67,10 +67,10 @@ for line in lines :
 
 		output_file_name = "%s_%s%s" % (input_file_name, chunk_number, input_file_extension)
 		output_file = open(output_file_name, 'w')
-		print '   Writing chunk %s to file %s...' % (chunk_number, output_file_name)
+		print( '   Writing chunk %s to file %s...' % (chunk_number, output_file_name))
 		output_file.write(header)
 
 	output_file.write(line)
 
 output_file.close()
-print 'Done!\n'
+print ('Done!\n')
